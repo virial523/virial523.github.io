@@ -11,9 +11,9 @@
 
 <style>
   :root {
-    --bg: #f5f7fa;
-    --grid-container: #bbdefb;
-    --cell-bg: #007aff;
+    --bg: #f5f7fa;          
+    --grid-container: #bbdefb; 
+    --cell-bg: #007aff;     
     --text-color: #ffffff;
     --dark-text: #333333;
   }
@@ -76,14 +76,12 @@
     font-weight: 600;
   }
 
-  /* Grid Styling matching the image */
   .grid-wrapper {
     background: var(--grid-container);
     padding: 15px;
     border-radius: 24px;
     width: 100%;
     max-width: 450px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
   }
 
   .grid {
@@ -103,22 +101,18 @@
     font-weight: bold;
     color: white;
     transition: border-radius 0.2s ease, opacity 0.3s ease;
-    /* Essential for multi-touch */
     touch-action: none; 
   }
 
-  /* Morph into circle, keep color */
   .cell.selected {
     border-radius: 50%;
   }
 
-  /* Correct/Used state: 80% transparent */
   .cell.faded {
     opacity: 0.2 !important;
     pointer-events: none;
   }
 
-  /* Menu Styles */
   h1 { font-size: 2.5rem; color: var(--cell-bg); margin-bottom: 30px; }
   .btn-start {
     background: var(--cell-bg);
@@ -282,7 +276,7 @@ function createBoard() {
     const el = document.createElement("div");
     el.className = "cell";
     el.textContent = value;
-    const cell = { value, el, used: false }
+    const cell = { value, el, used: false };
     
     el.addEventListener("pointerdown", (e) => {
       e.preventDefault();
@@ -301,7 +295,6 @@ function handlePress(cell) {
   if (remainingFactors[v] > 0) {
     remainingFactors[v]--;
     cell.used = true;
-    
     cell.el.classList.add("selected");
     
     if (Object.values(remainingFactors).every(c => c === 0)) {
@@ -314,11 +307,11 @@ function handlePress(cell) {
 }
 
 function completeNumber() {
-  // Turn all selected cells into 80% transparent
   cells.forEach(c => {
     if (c.used && !c.el.classList.contains("faded")) {
       c.el.classList.add("faded");
       c.el.classList.remove("selected");
+      // c.used remains true for board state tracking
     }
   });
 
@@ -330,16 +323,17 @@ function completeNumber() {
 
 function refreshBoardIfNeeded() {
   const neededNow = factorCount(currentN);
+  const neededNext = factorCount(currentN + 1);
   const remaining = cells.filter(c => !c.el.classList.contains("faded")).length;
 
-  if (neededNow > remaining) {
+  if (neededNow + neededNext > remaining) {
     const fadedCells = cells.filter(c => c.el.classList.contains("faded"));
     const newValues = fadedCells.map(() => seq.next().value);
     shuffle(newValues);
 
     fadedCells.forEach((cell, i) => {
       cell.el.classList.remove("faded");
-      cell.used = false;
+      cell.used = false; // Reset used status for the new number
       cell.value = newValues[i];
       cell.el.textContent = cell.value;
     });
