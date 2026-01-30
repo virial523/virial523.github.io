@@ -1,0 +1,13 @@
+[
+  { "q": "\\frac{1}{a^2 + x^2}", "a": "\\frac{1}{a}\\tan^{-1}\\left(\\frac{x}{a}\\right) + C" },
+  { "q": "\\frac{1}{\\sqrt{a^2 - x^2}}", "a": "\\sin^{-1}\\left(\\frac{x}{a}\\right) + C" },
+  { "q": "\\frac{1}{|x|\\sqrt{x^2 - a^2}}", "a": "\\sec^{-1}\\left(\\frac{|x|}{a}\\right) + C" },
+  { "q": "\\frac{1}{a^2 - x^2}", "a": "\\frac{1}{2a}\\ln\\left|\\frac{a+x}{a-x}\\right| + C" },
+  { "q": "\\frac{1}{x\\sqrt{x^2 + a^2}}", "a": "\\csc^{-1}\\left(\\frac{x}{a}\\right) + C" },
+
+  { "q": "\\frac{1}{\\sqrt{x^2 + a^2}}", "a": "\\sinh^{-1}\\left(\\frac{x}{a}\\right) + C" },
+  { "q": "\\frac{1}{\\sqrt{x^2 - a^2}}", "a": "\\cosh^{-1}\\left(\\frac{x}{a}\\right) + C" },
+  { "q": "\\frac{1}{a^2 - x^2}", "a": "\\frac{1}{a}\\tanh^{-1}\\left(\\frac{x}{a}\\right) + C" },
+  { "q": "\\frac{1}{x\\sqrt{x^2 - a^2}}", "a": "\\sech^{-1}\\left(\\frac{a}{x}\\right) + C" },
+  { "q": "\\frac{1}{x\\sqrt{x^2 + a^2}}", "a": "\\csch^{-1}\\left(\\frac{x}{a}\\right) + C" }
+]
