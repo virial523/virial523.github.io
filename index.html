@@ -1,369 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover" />
-<title>Factorization Game</title>
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Factor Game">
-
-<style>
-  :root {
-    --bg: #f5f7fa;          
-    --grid-container: #bbdefb; 
-    --cell-bg: #007aff;     
-    --text-color: #ffffff;
-    --dark-text: #333333;
-  }
-
-  * {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-  }
-
-  html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    overflow: hidden;
-    background: var(--bg);
-    color: var(--dark-text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  }
-
-  .screen {
-    position: absolute;
-    inset: 0;
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    padding-top: env(safe-area-inset-top);
-  }
-
-  .screen.active { display: flex; }
-
-  .top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 450px;
-    padding: 10px 5px;
-    margin-bottom: 20px;
-  }
-
-  .close-btn {
-    background: none;
-    border: none;
-    font-size: 28px;
-    font-weight: 300;
-    cursor: pointer;
-    color: #000;
-    padding: 10px;
-  }
-
-  .stats {
-    display: flex;
-    gap: 20px;
-    font-size: 22px;
-    font-weight: 600;
-  }
-
-  .grid-wrapper {
-    background: var(--grid-container);
-    padding: 15px;
-    border-radius: 24px;
-    width: 100%;
-    max-width: 450px;
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
-  }
-
-  .cell {
-    aspect-ratio: 1 / 1;
-    background: var(--cell-bg);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    font-weight: bold;
-    color: white;
-    transition: border-radius 0.2s ease, opacity 0.3s ease;
-    touch-action: none; 
-  }
-
-  .cell.selected {
-    border-radius: 50%;
-  }
-
-  .cell.faded {
-    opacity: 0.2 !important;
-    pointer-events: none;
-  }
-
-  h1 { font-size: 2.5rem; color: var(--cell-bg); margin-bottom: 30px; }
-  .btn-start {
-    background: var(--cell-bg);
-    color: white;
-    border: none;
-    padding: 15px 60px;
-    border-radius: 50px;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-
-  #countdown-display { font-size: 8rem; font-weight: 900; color: var(--cell-bg); }
-
-  .overlay {
-    position: fixed;
-    inset: 0;
-    background: #ff4d4d;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    z-index: 100;
-  }
-  .overlay.active { opacity: 0.4; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Calculus Tester</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- MathQuill & jQuery Dependencies -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.js"></script>
 </head>
 <body>
 
-  <div id="menu-screen" class="screen active">
-    <h1>FACTOR GAME</h1>
-    <button class="btn-start" onclick="startCountdown()">START</button>
-  </div>
-
-  <div id="countdown-screen" class="screen">
-    <div id="countdown-display">3</div>
-  </div>
-
-  <div id="game-screen" class="screen">
-    <div class="top-bar">
-      <button class="close-btn" onclick="quitGame()">✕</button>
-      <div class="stats">
-        <div id="timer-box" style="font-weight: 400; opacity: 0.5;">: <span id="time">57</span></div>
-        <div><span id="target">1</span></div>
-      </div>
+    <!-- Main Menu -->
+    <div id="menu-screen" class="screen">
+        <h1>Calculus Tester</h1>
+        <button id="show-options">Start</button>
+        
+        <div id="options-dropdown" class="hidden">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Topic</th>
+                        <th>d/dx</th>
+                        <th>∫</th>
+                        <th>Other</th>
+                    </tr>
+                </thead>
+                <tbody id="topic-grid">
+                    <!-- JavaScript will populate this -->
+                </tbody>
+            </table>
+            <button id="start-test" disabled>Begin Test</button>
+        </div>
     </div>
-    
-    <div class="grid-wrapper">
-      <div id="grid" class="grid"></div>
+
+    <!-- Test Screen -->
+    <div id="test-screen" class="screen hidden">
+        <div id="question-area">
+            <p>Solve:</p>
+            <div id="math-question"></div>
+        </div>
+        <div id="answer-container">
+            <span id="math-input"></span>
+        </div>
+        <button id="submit-answer">Submit</button>
+        <p id="feedback"></p>
     </div>
-  </div>
 
-  <div id="overlay" class="overlay"></div>
+    <!-- Result Screen -->
+    <div id="result-screen" class="screen hidden">
+        <h2>Results</h2>
+        <div id="diagram-container"></div>
+        <button onclick="location.reload()">Back to Menu</button>
+    </div>
 
-<script>
-/* =========================
-   A027746 generator
-========================= */
-function* a027746() {
-  yield 1;
-  let n = 2;
-  while (true) {
-    let x = n;
-    let p = 2;
-    while (p * p <= x) {
-      while (x % p === 0) { yield p; x /= p; }
-      p++;
-    }
-    if (x > 1) yield x;
-    n++;
-  }
-}
-
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
-
-function factorMap(n) {
-  const map = {};
-  let x = n, p = 2;
-  while (p * p <= x) {
-    while (x % p === 0) { map[p] = (map[p] || 0) + 1; x /= p; }
-    p++;
-  }
-  if (x > 1) map[x] = (map[x] || 0) + 1;
-  if (n === 1) map[1] = 1;
-  return map;
-}
-
-function factorCount(n) {
-  if (n === 1) return 1;
-  let c = 0, x = n, p = 2;
-  while (p * p <= x) {
-    while (x % p === 0) { c++; x /= p; }
-    p++;
-  }
-  if (x > 1) c++;
-  return c;
-}
-
-/* =========================
-   Game Logic
-========================= */
-const menuScreen = document.getElementById("menu-screen");
-const countdownScreen = document.getElementById("countdown-screen");
-const gameScreen = document.getElementById("game-screen");
-const countdownDisplay = document.getElementById("countdown-display");
-const gridEl = document.getElementById("grid");
-const targetEl = document.getElementById("target");
-const timeEl = document.getElementById("time");
-const overlayEl = document.getElementById("overlay");
-
-let seq, cells = [], currentN = 1, remainingFactors = {}, wrongStreak = 0;
-let locked = false, timeLeft = 57, timer;
-
-function startCountdown() {
-  menuScreen.classList.remove("active");
-  countdownScreen.classList.add("active");
-  let count = 3;
-  countdownDisplay.textContent = count;
-  const interval = setInterval(() => {
-    count--;
-    if (count > 0) countdownDisplay.textContent = count;
-    else { clearInterval(interval); initGame(); }
-  }, 700);
-}
-
-function quitGame() {
-  clearInterval(timer);
-  gameScreen.classList.remove("active");
-  menuScreen.classList.add("active");
-  overlayEl.classList.remove("active");
-}
-
-function initGame() {
-  gridEl.innerHTML = "";
-  cells = [];
-  currentN = 1;
-  timeLeft = 57;
-  wrongStreak = 0;
-  locked = false;
-  seq = a027746();
-  remainingFactors = factorMap(currentN);
-  
-  targetEl.textContent = currentN;
-  timeEl.textContent = timeLeft;
-  countdownScreen.classList.remove("active");
-  gameScreen.classList.add("active");
-
-  createBoard();
-  startTimer();
-}
-
-function createBoard() {
-  const values = [];
-  for (let i = 0; i < 25; i++) values.push(seq.next().value);
-  shuffle(values);
-
-  values.forEach(value => {
-    const el = document.createElement("div");
-    el.className = "cell";
-    el.textContent = value;
-    const cell = { value, el, used: false };
-    
-    el.addEventListener("pointerdown", (e) => {
-      e.preventDefault();
-      handlePress(cell);
-    });
-    
-    gridEl.appendChild(el);
-    cells.push(cell);
-  });
-}
-
-function handlePress(cell) {
-  if (locked || cell.used) return;
-
-  const v = cell.value;
-  if (remainingFactors[v] > 0) {
-    remainingFactors[v]--;
-    cell.used = true;
-    cell.el.classList.add("selected");
-    
-    if (Object.values(remainingFactors).every(c => c === 0)) {
-      completeNumber();
-    }
-  } else {
-    wrongStreak++;
-    if (wrongStreak >= 3) triggerPenalty();
-  }
-}
-
-function completeNumber() {
-  cells.forEach(c => {
-    if (c.used && !c.el.classList.contains("faded")) {
-      c.el.classList.add("faded");
-      c.el.classList.remove("selected");
-      // c.used remains true for board state tracking
-    }
-  });
-
-  currentN++;
-  targetEl.textContent = currentN;
-  refreshBoardIfNeeded();
-  remainingFactors = factorMap(currentN);
-}
-
-function refreshBoardIfNeeded() {
-  const neededNow = factorCount(currentN);
-  const neededNext = factorCount(currentN + 1);
-  const remaining = cells.filter(c => !c.el.classList.contains("faded")).length;
-
-  if (neededNow + neededNext > remaining) {
-    const fadedCells = cells.filter(c => c.el.classList.contains("faded"));
-    const newValues = fadedCells.map(() => seq.next().value);
-    shuffle(newValues);
-
-    fadedCells.forEach((cell, i) => {
-      cell.el.classList.remove("faded");
-      cell.used = false; // Reset used status for the new number
-      cell.value = newValues[i];
-      cell.el.textContent = cell.value;
-    });
-  }
-}
-
-function triggerPenalty() {
-  locked = true;
-  wrongStreak = 0;
-  overlayEl.classList.add("active");
-  setTimeout(() => {
-    overlayEl.classList.remove("active");
-    locked = false;
-  }, 800);
-}
-
-function startTimer() {
-  timer = setInterval(() => {
-    timeLeft--;
-    timeEl.textContent = timeLeft;
-    if (timeLeft <= 0) endGame();
-  }, 1000);
-}
-
-function endGame() {
-  clearInterval(timer);
-  locked = true;
-  alert("Time's up! Score: " + (currentN - 1));
-  quitGame();
-}
-</script>
+    <script src="script.js"></script>
 </body>
 </html>
